@@ -1,40 +1,28 @@
 #include "main.h"
 
 /**
- * get_error - calls the error according the builtin, syntax or permission
- * @datash: data structure that contains arguments
- * @eval: error value
- * Return: error
+ * get_builtin - builtin that pais the command in the arg
+ * @cmd: command
+ * Return: function pointer of the builtin command
  */
-int get_error(data_shell *datash, int eval)
+int (*get_builtin(char *cmd))(data_shell *)
 {
-	char *error;
+	builtin_t builtin[] = {
+		{ "env", _env },
+		{ "exit", exit_shell },
+		{ "setenv", _setenv },
+		{ "unsetenv", _unsetenv },
+		{ "cd", cd_shell },
+		{ "help", get_help },
+		{ NULL, NULL }
+	};
+	int i;
 
-	switch (eval)
+	for (i = 0; builtin[i].name; i++)
 	{
-	case -1:
-		error = error_env(datash);
-		break;
-	case 126:
-		error = error_path_126(datash);
-		break;
-	case 127:
-		error = error_not_found(datash);
-		break;
-	case 2:
-		if (_strcmp("exit", datash->args[0]) == 0)
-			error = error_exit_shell(datash);
-		else if (_strcmp("cd", datash->args[0]) == 0)
-			error = error_get_cd(datash);
-		break;
+		if (_strcmp(builtin[i].name, cmd) == 0)
+			break;
 	}
 
-	if (error)
-	{
-		write(STDERR_FILENO, error, _strlen(error));
-		free(error);
-	}
-
-	datash->status = eval;
-	return (eval);
+	return (builtin[i].f);
 }

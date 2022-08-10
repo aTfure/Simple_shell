@@ -12,7 +12,7 @@ void free_data(data_shell *datash)
 
 	for (i = 0; datash->_environ[i]; i++)
 	{
-	free(datash->_environ[i]);
+		free(datash->_environ[i]);
 	}
 
 	free(datash->_environ);
@@ -37,13 +37,13 @@ void set_data(data_shell *datash, char **av)
 	datash->counter = 1;
 
 	for (i = 0; environ[i]; i++)
-	;
+		;
 
 	datash->_environ = malloc(sizeof(char *) * (i + 1));
 
 	for (i = 0; environ[i]; i++)
 	{
-	datash->_environ[i] = _strdup(environ[i]);
+		datash->_environ[i] = _strdup(environ[i]);
 	}
 
 	datash->_environ[i] = NULL;
@@ -68,6 +68,6 @@ int main(int ac, char **av)
 	shell_loop(&datash);
 	free_data(&datash);
 	if (datash.status < 0)
-	return (255);
+		return (255);
 	return (datash.status);
 }
